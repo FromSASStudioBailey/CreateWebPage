@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-16"?><Task schemaVersion="7.2">
+	<Registration>
+	    <Name>Create Web Page</Name>
+	    <Description>The List Data task displays the contents of a table as a report.</Description>
+	    <GUID>454536B-485B-493E-B21A-EF19D7DA412C</GUID>
+		<Procedures>PRINT SORT</Procedures>
+		<Version>5.2</Version>
+		<Links>
+         <Link href="http://documentation.sas.com/?softwareId=STUDIOBASIC&amp;softwareVersion=5.2&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+         <Link href=""> </Link>
+         <Link href=""> </Link>
+		 <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=5.2_9.4&amp;softwareContextId=proc_print&amp;requestor=inapp">The PRINT Procedure</Link>
+         <Link href=""> </Link>
+         <Link href=""> </Link>
+		 <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=5.2_9.4&amp;softwareContextId=proc_sort&amp;requestor=inapp">The SORT Procedure</Link>
+         <Link href=""> </Link>
+         <Link href=""> </Link>         
+         <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+		</Links>
+	</Registration>
+	<Metadata>
+		<DataSources>
+			<DataSource name="DATASOURCE" where="true">
+				<Roles>
+					<Role exclude="nbrtext,multivar,snglvar" maxVars="1" minVars="0" name="targvar" order="true" type="A">Select Target (if applicable):</Role>
+					<Role exclude="nbrtext,multivar,targvar" maxVars="0" minVars="0" name="snglvar" order="true" type="A">Single select values:</Role>
+					<Role exclude="nbrtext,snglvar,targvar" maxVars="0" minVars="0" name="multivar" order="true" type="A">Multi select values:</Role>
+					<Role exclude="snglvar,multivar,targvar" maxVars="0" minVars="0" name="nbrtext" order="true" type="A">Text input box:</Role>
+					<Role maxVars="0" minVars="0" name="ID" order="true" type="A">Identifying label:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="all" inputType="combobox" name="ROWS2LIST">Rows to list:</Option>
+			<Option inputType="string" name="all">All rows</Option>
+			<Option inputType="string" name="firstnrows">First n rows</Option>
+			<!--<Option inputType="string" name="firstnpct">First n percent of rows</Option>-->
+			<!--<Option inputType="string" name="everynrow">Every nth row</Option>-->
+				<Option decimalPlaces="0" defaultValue="10" indent="1" inputType="numstepper" maxValue="999999" minValue="1" name="NVALUE" required="true">Amount (n):</Option>
+				<!--<Option decimalPlaces="0" defaultValue="25" indent="1" inputType="numstepper" maxValue="100" minValue="1" name="NPERCENT">Percent (n):</Option>-->
+
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+			<Option inputType="string" name="ROLESGROUP">ROLES</Option>
+
+			<Option inputType="string" name="OPTIONSTAB">OPTIONS</Option>
+			<Option inputType="string" name="BASICOPTIONS">BASIC OPTIONS</Option>
+
+			<Option defaultValue="1" inputType="checkbox" name="OBS">Display row numbers</Option>
+			<Option indent="1" inputType="inputtext" name="OBSHEADING" width="250px">Column label:</Option>
+
+			<Option defaultValue="1" inputType="checkbox" name="LABEL">Use column labels as column headings</Option>
+
+			<Option defaultValue="0" inputType="checkbox" name="PRINTNUMROWS">Display number of rows</Option>
+
+			<Option defaultValue="0" inputType="checkbox" name="ROUND">Round values before summing the variable</Option>
+
+			<Option defaultValue="default" inputType="combobox" name="HEADING">Heading direction:</Option>
+			<Option inputType="string" name="default">Default</Option>
+			<Option inputType="string" name="horizontal">Horizontal</Option>
+			<Option inputType="string" name="vertical">Vertical</Option>
+
+			<Option defaultValue="default" inputType="combobox" name="WIDTH">Column width:</Option>
+			<Option inputType="string" name="full">Full</Option>
+			<Option inputType="string" name="minimum">Minimum</Option>
+			<Option inputType="string" name="uniform">Uniform</Option>
+			<Option inputType="string" name="uniformby">Uniform by</Option>
+
+			<Option defaultValue="0" inputType="checkbox" name="SPLITLABEL">Split labels</Option>
+			<Option defaultValue="*" indent="1" inputType="combobox" name="SPLITLABELVALUE">Split character:</Option>
+         
+         <Option inputType="string" name="titleText">List Data for {1}</Option>
+		<Option defaultValue="0" inputType="checkbox" name="chksngl">Create variable chkSngl for coding use?</Option>
+		<Option defaultValue="0" inputType="checkbox" name="chkmulti">Create variable chkMulti for coding use?</Option>
+		<Option defaultValue="0" inputType="checkbox" name="chknbr">Create variable chknbr for coding use?</Option>
+		<Option defaultValue="0" inputType="checkbox" name="chkbox1">Create variable chkbox1 for coding use?</Option>
+		<Option defaultValue="" inputType="inputtext"  name="textchksngl" required="false">Lable for check box goes here:</Option>
+
+		</Options>
+	  </Metadata>
+	  <UI>
+		  <Container option="DATATAB">
+			  <Group open="true" option="DATAGROUP">
+				  <DataItem data="DATASOURCE"/>
+			  </Group>
+			  <Group open="true" option="ROLESGROUP">
+		<!--		  <RoleItem role="targvar"/>				  
+				  <OptionItem option="chksngl"/>
+				  <OptionItem option="textchksngl"/> -->
+				  <RoleItem role="snglvar"/>
+ 				  <RoleItem role="chkmulti"/>  
+				  <RoleItem role="multivar"/>
+		<!--		  <RoleItem role="chknbr"/>  -->
+				  <RoleItem role="nbrtext"/>
+	<!--			  <RoleItem role="chkbox1"/>
+				  <RoleItem role="ID"/> -->
+			  </Group>
+		  </Container>
+
+		  <Container option="OPTIONSTAB">
+
+			  <Group open="true" option="BASICOPTIONS">
+
+			  <OptionItem option="OBS"/>			
+			  <OptionItem option="OBSHEADING"/>	      
+			  <OptionItem option="LABEL"/>
+			  <OptionItem option="PRINTNUMROWS"/>
+			  <OptionItem option="ROUND"/>
+
+			  <OptionChoice option="HEADING">
+				<OptionItem option="default"/>
+				<OptionItem option="horizontal"/>
+				<OptionItem option="vertical"/>
+			  </OptionChoice>
+
+			  <OptionChoice option="WIDTH">
+				<OptionItem option="default"/>
+				<OptionItem option="full"/>
+				<OptionItem option="minimum"/>
+				<OptionItem option="uniform"/>
+				<OptionItem option="uniformby"/>
+			  </OptionChoice>
+
+			  <OptionItem option="SPLITLABEL"/>
+			  <OptionChoice option="SPLITLABELVALUE">
+				  <OptionValue>*</OptionValue>
+				  <OptionValue>!</OptionValue>
+				  <OptionValue>@</OptionValue>
+				  <OptionValue>#</OptionValue>
+				  <OptionValue>$</OptionValue>
+				  <OptionValue>%</OptionValue>
+				  <OptionValue>^</OptionValue>
+				  <OptionValue>&amp;</OptionValue>
+				  <OptionValue>+</OptionValue>
+				</OptionChoice>	      
+
+				<OptionChoice option="ROWS2LIST">
+					<OptionItem option="all"/>
+					<OptionItem option="firstnrows"/>
+			  </OptionChoice>
+			  <OptionItem option="NVALUE"/>
+
+			</Group>
+		  </Container>
+	  </UI>
+	<Dependencies>
+		<Dependency condition="$OBS=='1'">
+			<Target action="enable" conditionResult="true" option="OBSHEADING"/>
+			<Target action="disable" conditionResult="false" option="OBSHEADING"/>
+		</Dependency>
+		<Dependency condition="$SPLITLABEL=='1'">
+			<Target action="enable" conditionResult="true" option="SPLITLABELVALUE"/>
+			<Target action="disable" conditionResult="false" option="SPLITLABELVALUE"/>
+		</Dependency>
+		<Dependency condition="$ROWS2LIST.equalsIgnoreCase('firstnrows')">
+			<Target action="enable" conditionResult="true" option="NVALUE"/>
+			<Target action="disable" conditionResult="false" option="NVALUE"/>
+		</Dependency>
+	</Dependencies>
+  	<CodeTemplate>
+		<![CDATA[
+
+
+#if (($snglvar.size() > 0)  || ($multivar.size() > 0))
+cas; 
+caslib _all_ assign;
+
+proc cardinality data=$DATASOURCE outcard=CASUSER.My_Summary 
+		out=CASUSER.My_Levels;
+	vars #if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) $item#end#end #if ($multivar.size() > 0 ) #foreach($item in $multivar ) $item#end#end;
+run;
+
+DATA CASUSER.My_Levels2;
+set CASUSER.MY_LEVELS(KEEP=_VARNAME_ _RAWCHAR_ _INDEX_ _CFMT_);
+
+VARSEG=CATS(_VARNAME_,'\',_CFMT_);
+
+/* BELOW MS STANDS FOR MULTI-SELECT */
+LENGTH MS $1.;
+MS='N';
+
+#if ($multivar.size() > 0 ) if _VARNAME_ IN ( #foreach($item in $multivar )'$item'#if( $foreach.hasNext),#end#end) then MS='Y';#end
+
+
+
+RENAME
+_VARNAME_ = VARIABLZ
+_CFMT_ = SEGMENT;
+RUN;
+
+
+/* below shows what the output of CASUSER.my_levels2 look like for the variable urbanicity */
+/* Variablz	Index	Segment	Varseg */
+/* Urbanicity	1	Rural	Urbanicity\Rural */
+/* Urbanicity	2	Urban	Urbanicity\Urban */
+
+
+/* below will find the first record of every variable and tag it with _INDEX_=0  */
+/* THIS IS DONE TO HELP CREATE THE HTML LABEL */
+DATA CASUSER.ZERO_INDEX;
+
+SET CASUSER.MY_LEVELS2 (where=(_INDEX_=1));
+
+_INDEX_=0;
+RUN;
+
+/* THIS IS DOEN TO CREATE THE FIRST LINE OF THE HTML DROP DOWN LIST */
+DATA CASUSER.ONE_INDEX;
+
+SET CASUSER.MY_LEVELS2 (where=(_INDEX_=1));
+
+_INDEX_=1;
+RUN;
+
+/* THIS IS MEANT TO POPULATE THE HTML DROP DOWN LIST */
+DATA CASUSER.GT1_INDEX;
+
+SET CASUSER.MY_LEVELS2;
+
+_INDEX_=_INDEX_ + 1;
+RUN;
+
+
+Data work.MY_LEVELS3;
+SET
+CASUSER.ZERO_INDEX
+CASUSER.ONE_INDEX
+CASUSER.GT1_INDEX;
+
+by variablz _index_;
+
+LENGTH HTML_TEXT $400.;
+
+IF _INDEX_ = 0 THEN 
+	DO;
+IF MS='N' THEN
+						DO;
+							HTML_TEXT=CAT('<P>Select ',VARIABLZ,':</p>');
+ 	   						OUTPUT;
+						END;
+		
+IF MS='Y' THEN
+	DO;
+		HTML_TEXT=CAT('<P>Select ',VARIABLZ,':</p>');OUTPUT;
+	#if ($chkmulti =='1')
+	HTML_TEXT=CATS('<input type="checkbox" name="chk',VARIABLZ, '" id="chk', VARIABLZ,'" class="jobexec_sample_input_checkbox"/>');OUTPUT;
+	HTML_TEXT=CATS('<label for="chk',VARIABLZ,'">Invert selection</label>');OUTPUT;
+	HTML_TEXT='<br/>'; OUTPUT;
+	#end
+	END;		
+
+	END;
+
+IF _INDEX_ = 1 THEN
+	DO;
+IF MS='N' THEN
+						DO;
+							HTML_TEXT=CATS('<select name="', VARIABLZ, '" id="', VARIABLZ, 
+								'" class="jobexec_sample_select" required>');
+							OUTPUT;
+						END;
+		
+					IF MS='Y' THEN
+						DO;
+							HTML_TEXT=CATS('<select name="', VARIABLZ, '" id="', VARIABLZ, 
+								'" multiple class="jobexec_sample_multiselect" required>');
+							OUTPUT;
+						END;
+
+END;
+
+
+IF _INDEX_ > 1 THEN
+	DO;
+		IF _INDEX_=2 THEN
+			DO;
+				HTML_TEXT='<option value="Not Used" selected >Not Used</option>'; OUTPUT;
+			END;
+	HTML_TEXT=CATS('<option value="',SEGMENT,'">',SEGMENT,'</option>');OUTPUT;
+	END;
+
+IF LAST.VARIABLZ THEN
+DO;
+ HTML_TEXT='</select>';
+OUTPUT;
+HTML_TEXT='<br/>';output;
+HTML_TEXT='<br/>';output;
+END;
+run;
+#end
+  filename myText  "/home/sasdemo/CreateWebPage/MY_HTML.txt";
+data _null_;
+file myText;
+
+set work.MY_LEVELS3 (keep=HTML_TEXT) end=endXML;
+if _n_=1 then
+do;
+put '<!DOCTYPE html>';
+put '<html lang="en">';
+put '<head>';
+put '<title>TestMyHTML</title>';
+put '<link rel="stylesheet" href="/SASJobExecution/theme">';
+put '</head>';
+
+put '<body role="main" class="jobexec_body">';
+put '<form class="jobexec_form" action="/SASJobExecution/" >';
+put '<input type="hidden" name="_program" value="$PROGRAM$"/>';
+put '<input type="hidden" name="_action"  value="execute"/>';
+put '<div class="jobexec_sample_header">SAS<sup>&#174;</sup> Job Execution</div>';
+put '<hr/>';
+put '<br/>';
+end;
+
+
+put HTML_TEXT;
+
+if endXML=1 then
+do;
+put '<hr/>';
+put '<br/>';
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext )put '<label for="$item"> $item:</label>';
+put '<input type="text" name="$item" id="$item" value="Not Used" required class="jobexec_sample_input_text"/>';
+put '<hr/>';
+put '<br/>';#end#end
+
+put '<input type="submit" value="Run code" class="jobexec_sample_input_submit"/>';
+put '<input type="checkbox" name="_debug" id="_debug" value="log" class="jobexec_sample_input_checkbox"/><label for="_debug">Show SAS Log</label>';
+put '</form>';
+put '</body>';
+put '</html>';
+end;
+RUN;
+
+/* COMMENT: ASSUME WE HAVE A MULTI-SELECT DROP DOWN CALLED COLOR. THE FIRST SELECTION MADE WILL POPULATE THE MACRO VARIABLE &COLOR. EXAMPLE FIRST COLOR SELECTED IS AQUA */
+/* COMMENT: THEN THE VALUE OF &COLOR WILL EQUAL AQUA. WE WORK WITH THIS MACRO VARIABLE TO MAKE SURE IT DOES NOT EQUAL "Not Used" */
+/* COMMENT: WRAPPING YOUR VARIABLES IN A SINGLE QUOTE IS DEFAULT, FOR DOUBLE, COMMENT OUT LINE BELOW AND THEN UNCOMMENT LINE BELOW THAT */
+/*%LET INSERT_TXT=SNGL_QT;*/ 
+/* COMMENT:%LET INSERT_TXT=DBL_QT; */
+
+/*#if ($multivar.size() > 0 ) %GLOBAL #foreach($item in $multivar ) chk${item} #end#end; */
+
+/*#if ($multivar.size() > 0 ) #foreach($item in $multivar ) %let ${item}_in_or_out=in; */
+/* %if %EVAL(&chk${item}=on) %then    */
+/*	%do;                             */
+/*		%let ${item}_in_or_out=NOT IN ; */
+/*	%end;                              */
+/* #end#end 							*/
+
+/*%macro listthem(my_var_name=,var_name_cnt=, insert_name=); */
+
+/* COMMENT:when user only selects one value from list box, the count variable macro does not get created. Example: they only select one option for Education */
+/* COMMENT:in that case the macro variable EDUCATION0 (COUNT OF SELECTIONS IN THIS CASE 1) DOES NOT GET CREATED. BELOW DEALS WITH THAT SITUATION */
+
+
+/*%if %eval(&insert_name=DBL_QT) %THEN */
+/*%DO;*/
+/*	%do n=1 %to &var_name_cnt.; "&&&my_var_name&n." %IF %eval(&n < &var_name_cnt) %THEN ,; */
+/*	%end; */
+/* %END;  */
+
+/* %if %eval(&insert_name=SNGL_QT) %THEN  */
+/* %DO;  */
+/*	%do n=1 %to &var_name_cnt.;%UNQUOTE(%STR(%')&&&my_var_name&n.%STR(%')) %IF %eval(&n < &var_name_cnt) %THEN ,;  */
+/*	%end; */
+/* %END;  */
+
+/* %mend listthem; */
+
+/*proc casutil;*/
+/*	droptable incaslib="casuser" casdata="$DATASOURCE_&SYSUSERID." quiet; */
+/*run;*/
+
+
+/*data $DATASOURCE_&SYSUSERID.(promote=yes);*/
+/*  SET $DATASOURCE;  */  
+
+/*LENGTH*/
+/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item} #end#end 
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item} #end#end
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item} #end#end
+$50.;*/
+
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext )
+/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
+/*  %do; */
+/*		IF $item < &${item}; */
+/*  %end; */
+#end#end
+
+
+#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) 
+/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
+/*  %do; */
+/*		IF $item IN ("&${item}."); */
+/*  %end; */
+#end#end
+
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) 
+/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then */
+/*  %do;*/
+/*		IF $item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.)); */
+/*  %end; */
+
+/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then */
+/*  %do;*/
+/*		IF $item &${item}_IN_OR_OUT.  ("&${item}."); */
+/*  %end;*/
+
+#end#end;
+
+
+/*RUN; */
+/*proc casutil;*/
+/*	droptable incaslib="casuser" casdata="CRITERIA&SYSUSERID." quiet;*/
+/*run;*/
+
+/*data casuser.CRITERIA&SYSUSERID.(promote=yes);*/
+
+/*LENGTH*/
+/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item} #end#end 
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item} #end#end
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item} #end#end
+$100.;*/
+
+
+/*COMMENT: OUR VA REPORT IS EXPECTING THESE VARIABLES, NEED TO MAKE SURE THEY EXIST EVEN IF POPULATED WITH NOTHING */
+/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item}=''; #end#end 
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item}=''; #end#end
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item}=''; #end#end
+*/
+
+#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext )
+/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
+/*  %do; */
+/*		CRITERIA_${item}="${item} < &${item}."; */
+/*  %end; */
+#end#end
+
+
+#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) 
+/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
+/*  %do; */
+/*		CRITERIA_${item}="${item} EQUALS '&${item}.'"; */
+/*  %end; */
+#end#end
+
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) 
+/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then */
+/*  %do;*/
+/*		CRITERIA_${item}="$item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.))"; */
+/*  %end; */
+
+/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then */
+/*  %do;*/
+/*		CRITERIA_${item}="$item &${item}_IN_OR_OUT.  (&${item}.)"; */
+/*  %end;*/
+#end#end
+
+
+/*RUN;*/
+
+
+
+
+
+
+
+
+
+
+		]]>
+	</CodeTemplate>
+</Task>
