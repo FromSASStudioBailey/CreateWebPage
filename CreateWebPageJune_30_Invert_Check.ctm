@@ -166,7 +166,7 @@
 cas; 
 caslib _all_ assign;
 
-proc cardinality data=$DATASOURCE outcard=CASUSER.My_Summary 
+proc cardinality data=${DATASOURCE} outcard=CASUSER.My_Summary 
 		out=CASUSER.My_Levels;
 	vars #if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) $item#end#end #if ($multivar.size() > 0 ) #foreach($item in $multivar ) $item#end#end;
 run;
@@ -332,133 +332,130 @@ put '</html>';
 end;
 RUN;
 
+%macro skipcode;
 /* COMMENT: ASSUME WE HAVE A MULTI-SELECT DROP DOWN CALLED COLOR. THE FIRST SELECTION MADE WILL POPULATE THE MACRO VARIABLE &COLOR. EXAMPLE FIRST COLOR SELECTED IS AQUA */
 /* COMMENT: THEN THE VALUE OF &COLOR WILL EQUAL AQUA. WE WORK WITH THIS MACRO VARIABLE TO MAKE SURE IT DOES NOT EQUAL "Not Used" */
 /* COMMENT: WRAPPING YOUR VARIABLES IN A SINGLE QUOTE IS DEFAULT, FOR DOUBLE, COMMENT OUT LINE BELOW AND THEN UNCOMMENT LINE BELOW THAT */
-/*%LET INSERT_TXT=SNGL_QT;*/ 
+%LET INSERT_TXT=SNGL_QT;
 /* COMMENT:%LET INSERT_TXT=DBL_QT; */
 
-/*#if ($multivar.size() > 0 ) %GLOBAL #foreach($item in $multivar ) chk${item} #end#end; */
+#if ($multivar.size() > 0 ) %GLOBAL #foreach($item in $multivar ) chk${item} #end#end; 
 
-/*#if ($multivar.size() > 0 ) #foreach($item in $multivar ) %let ${item}_in_or_out=in; */
-/* %if %EVAL(&chk${item}=on) %then    */
-/*	%do;                             */
-/*		%let ${item}_in_or_out=NOT IN ; */
-/*	%end;                              */
-/* #end#end 							*/
+#if ($multivar.size() > 0 ) #foreach($item in $multivar ) %let ${item}_in_or_out=in; 
+ %if %EVAL(&chk${item}=on) %then    
+	%do;                             
+		%let ${item}_in_or_out=NOT IN ; 
+	%end;                              
+ #end#end 							
 
-/*%macro listthem(my_var_name=,var_name_cnt=, insert_name=); */
+%macro listthem(my_var_name=,var_name_cnt=, insert_name=); 
 
 /* COMMENT:when user only selects one value from list box, the count variable macro does not get created. Example: they only select one option for Education */
 /* COMMENT:in that case the macro variable EDUCATION0 (COUNT OF SELECTIONS IN THIS CASE 1) DOES NOT GET CREATED. BELOW DEALS WITH THAT SITUATION */
 
 
-/*%if %eval(&insert_name=DBL_QT) %THEN */
-/*%DO;*/
-/*	%do n=1 %to &var_name_cnt.; "&&&my_var_name&n." %IF %eval(&n < &var_name_cnt) %THEN ,; */
-/*	%end; */
-/* %END;  */
+%if %eval(&insert_name=DBL_QT) %THEN 
+%DO;
+	%do n=1 %to &var_name_cnt.; "&&&my_var_name&n." %IF %eval(&n < &var_name_cnt) %THEN ,; 
+	%end; 
+ %END;  
 
-/* %if %eval(&insert_name=SNGL_QT) %THEN  */
-/* %DO;  */
-/*	%do n=1 %to &var_name_cnt.;%UNQUOTE(%STR(%')&&&my_var_name&n.%STR(%')) %IF %eval(&n < &var_name_cnt) %THEN ,;  */
-/*	%end; */
-/* %END;  */
+ %if %eval(&insert_name=SNGL_QT) %THEN  
+ %DO;  
+	%do n=1 %to &var_name_cnt.;%UNQUOTE(%STR(%')&&&my_var_name&n.%STR(%')) %IF %eval(&n < &var_name_cnt) %THEN ,;  
+	%end; 
+ %END;  
 
-/* %mend listthem; */
+ %mend listthem; 
 
-/*proc casutil;*/
-/*	droptable incaslib="casuser" casdata="$DATASOURCE_&SYSUSERID." quiet; */
-/*run;*/
+proc casutil;
+	droptable incaslib="casuser" casdata="$DATASOURCE.get('table')_&SYSUSERID." quiet; 
+run;
 
+data ${DATASOURCE}_&SYSUSERID.(promote=yes);
+  SET ${DATASOURCE};    
 
-/*data $DATASOURCE_&SYSUSERID.(promote=yes);*/
-/*  SET $DATASOURCE;  */  
-
-/*LENGTH*/
-/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item} #end#end 
-#if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item} #end#end
-#if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item} #end#end
-$50.;*/
 
 #if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext )
-/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
-/*  %do; */
-/*		IF $item < &${item}; */
-/*  %end; */
+%if (%bquote(&${item}) NE %str(Not Used)) %then 
+  %do; 
+		IF $item < &${item}; 
+  %end; 
 #end#end
 
 
 #if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) 
-/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
-/*  %do; */
-/*		IF $item IN ("&${item}."); */
-/*  %end; */
+%if (%bquote(&${item}) NE %str(Not Used)) %then 
+  %do; 
+		IF $item IN ("&${item}."); 
+  %end; 
 #end#end
 
 #if ($multivar.size() > 0 ) #foreach($item in $multivar ) 
-/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then */
-/*  %do;*/
-/*		IF $item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.)); */
-/*  %end; */
+%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then 
+  %do;
+		IF $item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.)); 
+  %end; 
 
-/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then */
-/*  %do;*/
-/*		IF $item &${item}_IN_OR_OUT.  ("&${item}."); */
-/*  %end;*/
+%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then 
+  %do;
+		IF $item &${item}_IN_OR_OUT.  ("&${item}."); 
+  %end;
 
 #end#end;
 
 
-/*RUN; */
-/*proc casutil;*/
-/*	droptable incaslib="casuser" casdata="CRITERIA&SYSUSERID." quiet;*/
-/*run;*/
+RUN; 
+proc casutil;
+	droptable incaslib="casuser" casdata="CRITERIA&SYSUSERID." quiet;
+run;
 
-/*data casuser.CRITERIA&SYSUSERID.(promote=yes);*/
+data casuser.CRITERIA&SYSUSERID.(promote=yes);
 
-/*LENGTH*/
-/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item} #end#end 
+LENGTH
+#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item} #end#end 
 #if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item} #end#end
 #if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item} #end#end
-$100.;*/
+$100.;
 
 
 /*COMMENT: OUR VA REPORT IS EXPECTING THESE VARIABLES, NEED TO MAKE SURE THEY EXIST EVEN IF POPULATED WITH NOTHING */
-/*#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item}=''; #end#end 
+#if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) CRITERIA_${item}=''; #end#end 
 #if ($multivar.size() > 0 ) #foreach($item in $multivar ) CRITERIA_${item}=''; #end#end
 #if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext ) CRITERIA_${item}=''; #end#end
-*/
+
 
 #if ($nbrtext.size() > 0 ) #foreach($item in $nbrtext )
-/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
-/*  %do; */
-/*		CRITERIA_${item}="${item} < &${item}."; */
-/*  %end; */
+%if (%bquote(&${item}) NE %str(Not Used)) %then 
+  %do; 
+		CRITERIA_${item}="${item} < &${item}."; 
+  %end; 
 #end#end
 
 
 #if ($snglvar.size() > 0 ) #foreach($item in $snglvar ) 
-/*%if (%bquote(&${item}) NE %str(Not Used)) %then */
-/*  %do; */
-/*		CRITERIA_${item}="${item} EQUALS '&${item}.'"; */
-/*  %end; */
+%if (%bquote(&${item}) NE %str(Not Used)) %then 
+  %do; 
+		CRITERIA_${item}="${item} EQUALS '&${item}.'"; 
+  %end; 
 #end#end
 
 #if ($multivar.size() > 0 ) #foreach($item in $multivar ) 
-/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then */
-/*  %do;*/
-/*		CRITERIA_${item}="$item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.))"; */
-/*  %end; */
+%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=1) %then 
+  %do;
+		CRITERIA_${item}="$item &${item}_IN_OR_OUT. (%listthem(my_var_name=$item,var_name_cnt=&${item}0.,insert_name=&insert_txt.))"; 
+  %end; 
 
-/*%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then */
-/*  %do;*/
-/*		CRITERIA_${item}="$item &${item}_IN_OR_OUT.  (&${item}.)"; */
-/*  %end;*/
+%if ((%bquote(&${item}) NE %str(Not Used)) AND %symexist(${item}0)=0) %then 
+  %do;
+		CRITERIA_${item}="$item &${item}_IN_OR_OUT.  (&${item}.)"; 
+  %end;
 #end#end
 
 
-/*RUN;*/
+RUN;
+
+%mend skipcode;
 
 
 
