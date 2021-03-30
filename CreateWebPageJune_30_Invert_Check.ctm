@@ -289,7 +289,7 @@ HTML_TEXT='<br/>';output;
 END;
 run;
 #end
-  filename myText  "/home/sasdemo/CreateWebPage/MY_HTML.txt";
+  filename myText  "/home/sasdemo/MyHTML/MY_HTML.txt";
 data _null_;
 file myText;
 
